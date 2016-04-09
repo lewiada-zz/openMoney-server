@@ -1,6 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
+
 var app = express();
 var url = 'mongodb://lewiada:&ek8IVnPo8*AqwaPoXC2h7s@ds019829.mlab.com:19829/openmoney/checking';
 
@@ -79,8 +80,8 @@ app.get('/api/:account', function (req, res) {
     
         // result.docs 
         // result.total 
-        // result.limit - 10 
-        // result.offset - 20 
+        // result.limit
+        // result.offset
 });
 
 
