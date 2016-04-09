@@ -1,3 +1,4 @@
+/* I love you Maribel! */
 var express = require('express');
 var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
@@ -46,8 +47,7 @@ app.post('/api/:account/:transaction', function(req, res) {
 // do it the mongoose way!
 // http://theholmesoffice.com/mongoose-and-node-js-tutorial
 // get fixed number of transactions, 25 by default
-// TODO: this current gets all transactions, change to number
-// TODO: build the JSON to return to client (current returns HTML)
+// TODO: build the JSON to return to client
 app.get('/api/:account', function (req, res) {
     
     var limit = req.query.limit || 25;
