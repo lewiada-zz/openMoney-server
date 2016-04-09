@@ -1,5 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 var app = express();
 var url = 'mongodb://lewiada:&ek8IVnPo8*AqwaPoXC2h7s@ds019829.mlab.com:19829/openmoney/checking';
 
@@ -16,6 +17,9 @@ var transactionSchema = mongoose.Schema({
     payee: String,
     date: Date
 }, {collection: 'checking'});
+
+// enable pagination
+transactionSchema.plugin(mongoosePaginate);
 
 // compile our schema into a Model
 var Transaction = mongoose.model('Transaction', transactionSchema);
@@ -45,8 +49,11 @@ app.post('/api/:account/:transaction', function(req, res) {
 // TODO: build the JSON to return to client (current returns HTML)
 app.get('/api/:account', function (req, res) {
     
-    var num = req.query.num || 25;
-    var idx = req.query.idx || 0;
+    var limit = req.query.limit || 25;
+    var offset = req.query.offset || 0;
+    
+    console.log(limit);
+    console.log(offset);
     
     // open a connection to the 'openmoney' database at mongolabs
     mongoose.connect('mongodb://lewiada:&ek8IVnPo8*AqwaPoXC2h7s@ds019829.mlab.com:19829/openmoney', function (err) {
@@ -58,7 +65,7 @@ app.get('/api/:account', function (req, res) {
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {        
-        Transaction.find(function (err, transactions) {
+        Transaction.paginate({}, { offset: offset, limit: limit }, function(err, transactions) {
             if (err) {
                 mongoose.connection.close();                
                 res.send('FAIL');
@@ -66,8 +73,14 @@ app.get('/api/:account', function (req, res) {
                 mongoose.connection.close();
                 res.send(transactions);
             }            
-        }).limit(num);
-    });    
+        });
+    });
+    
+    
+        // result.docs 
+        // result.total 
+        // result.limit - 10 
+        // result.offset - 20 
 });
 
 
